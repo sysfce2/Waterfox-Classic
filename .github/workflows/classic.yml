@@ -27,7 +27,7 @@ jobs:
           echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Install depends
-        if: ${{ false }}
+        if: ${{ true }}
         run: |
           iwr -useb get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin
@@ -44,7 +44,7 @@ jobs:
         #run: sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
         run: |
           echo "path before: $PATH"
-          echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin;${PATH}" >> $GITHUB_PATH
+          echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
 
       - name: test
         shell: bash
@@ -52,7 +52,7 @@ jobs:
           echo "path after: $PATH"
 
       - name: Cache for Windows
-        if: ${{ false }}
+        if: ${{ true }}
         uses: actions/cache@v3
         with:
           path: |
@@ -60,7 +60,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
       - name: Setup MSYS2
-        if: ${{ false }}
+        if: ${{ true }}
         uses: msys2/setup-msys2@v2
         with:
           release: false
@@ -71,13 +71,13 @@ jobs:
 
       - name: Build
         if: ${{ true }}
-        #shell: msys2 {0}
-        shell: bash
+        shell: msys2 {0}
+        #shell: bash
         run: |
           echo "G_WORKSPACE: ${{ env.G_WORKSPACE }}"
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
-          $Env:G_WORKSPACE/build/github-actions/build.sh
- 
+          ./build/github-actions/build.sh
+
       - name: Package
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
         run: C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/packageZip.sh"
