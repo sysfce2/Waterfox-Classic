@@ -25,11 +25,15 @@ jobs:
           $pattern = '[\\]'
           $BUILD_DIR = $env:GITHUB_WORKSPACE -replace $pattern, '/'
           echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
- 
-      - name: Install depends
+
+      - name: test
+        shell: cmd
         run: |
           dir
           iwr /?
+
+      - name: Install depends
+        run: |
           iwr -useb get.scoop.sh -outfile 'install.ps1'
           # .\install.ps1 -RunAsAdmin
           # scoop install sccache llvm nasm --global
