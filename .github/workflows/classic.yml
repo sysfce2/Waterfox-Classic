@@ -40,6 +40,7 @@ jobs:
         shell: cmd
         run: |
           dir
+          type install.ps1
 
       - name: Set system PATH variable
         if: ${{ false }}
@@ -54,9 +55,23 @@ jobs:
             ~/AppData/Local/Mozilla/sccache/cache
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
+      - name: Setup MSYS2
+        if: ${{ false }}
+        uses: msys2/setup-msys2@v2
+        with:
+          release: false
+          msystem: mingw64
+          #update: true
+          #install: autotools diffutils hg
+          #pacboy: gcc:p cmake:p
+
       - name: Build
         if: ${{ false }}
-        run: C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
+        shell: msys2 {0}
+        run: |
+          echo $Env:G_WORKSPACE
+          #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
+          #./mach build
  
       - name: Package
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
