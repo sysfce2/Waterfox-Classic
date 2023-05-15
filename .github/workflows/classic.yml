@@ -59,9 +59,9 @@ jobs:
         with:
           release: false
           msystem: mingw64
-          update: true
-          #install: autotools diffutils hg
-          pacboy: python2:p
+          #update: true
+          install: git
+          pacboy: nasm:p python2:p yasm:p
 
       - name: Build
         if: ${{ true }}
