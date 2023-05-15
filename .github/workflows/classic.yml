@@ -42,7 +42,10 @@ jobs:
         if: ${{ true }}
         shell: bash
         #run: sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
-        run: sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g'
+        run: |
+          echo "path before: $PATH"
+          echo "PATH=C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin;${PATH}" >> "$GITHUB_ENV"
+          echo "path after: $PATH"
  
       - name: Cache for Windows
         if: ${{ false }}
