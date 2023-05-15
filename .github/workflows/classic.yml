@@ -43,13 +43,7 @@ jobs:
         shell: bash
         #run: sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
         run: |
-          echo "path before: $PATH"
           echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
-
-      - name: test
-        shell: bash
-        run: |
-          echo "path after: $PATH"
 
       - name: Cache for Windows
         if: ${{ true }}
@@ -65,16 +59,14 @@ jobs:
         with:
           release: false
           msystem: mingw64
-          #update: true
+          update: true
           #install: autotools diffutils hg
-          #pacboy: gcc:p cmake:p
+          pacboy: python2:p
 
       - name: Build
         if: ${{ true }}
         shell: msys2 {0}
-        #shell: bash
         run: |
-          echo "G_WORKSPACE: ${{ env.G_WORKSPACE }}"
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
           ./build/github-actions/build.sh
 
