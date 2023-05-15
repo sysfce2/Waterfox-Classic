@@ -45,8 +45,12 @@ jobs:
         run: |
           echo "path before: $PATH"
           echo "PATH=C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin;${PATH}" >> "$GITHUB_ENV"
+
+      - name: test
+        shell: bash
+        run: |
           echo "path after: $PATH"
- 
+
       - name: Cache for Windows
         if: ${{ false }}
         uses: actions/cache@v3
@@ -70,7 +74,7 @@ jobs:
         #shell: msys2 {0}
         shell: bash
         run: |
-          echo $Env:G_WORKSPACE
+          echo "G_WORKSPACE: ${{ env.G_WORKSPACE }}"
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
           #./mach build
  
