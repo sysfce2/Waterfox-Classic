@@ -44,7 +44,7 @@ jobs:
         #run: sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
         run: |
           echo "path before: $PATH"
-          echo "PATH=C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin;${PATH}" >> "$GITHUB_ENV"
+          echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin;${PATH}" >> $GITHUB_PATH
 
       - name: test
         shell: bash
@@ -76,7 +76,7 @@ jobs:
         run: |
           echo "G_WORKSPACE: ${{ env.G_WORKSPACE }}"
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
-          #./mach build
+          $Env:G_WORKSPACE/build/github-actions/build.sh
  
       - name: Package
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
