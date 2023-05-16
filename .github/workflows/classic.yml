@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
-        if: ${{ false }}
+        if: ${{ true }}
         uses: actions/checkout@v3
  
       - name: Set build directory
