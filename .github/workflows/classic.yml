@@ -90,8 +90,8 @@ jobs:
         if: ${{ true }}
         run: |
           TOOLCHAIN="stable-$(uname -m)-pc-windows-gnu"
-          rustup toolchain install $TOOLCHAIN -v
-          rustup default $TOOLCHAIN -v
+          rustup toolchain install $TOOLCHAIN
+          rustup default $TOOLCHAIN
 
       - name: Build
         if: ${{ true }}
