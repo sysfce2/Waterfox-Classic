@@ -77,39 +77,34 @@ jobs:
           #  yasm:p
           #  toolchain:p
 
-      - name: Setup rust environment vars
-        shell: bash
+      - name: Set rust environment vars
+        shell: msys2 {0}
         run: |
           echo "RUSTUP_HOST=$(uname -m)-pc-windows-gnu" >> $GITHUB_ENV
-          echo "CARGO_DIR=${USERPROFILE}\.cargo\bin" >> $GITHUB_ENV
+          CARGO_DIR="${USERPROFILE//'C:'/'/c'}"
+          CARGO_DIR="${CARGO_DIR//'\'/'/'}"
+          echo "CARGO_DIR=${CARGO_DIR}\.cargo\bin" >> $GITHUB_ENV
+
+      - name: Set MSYS2 PATH variable
+        shell: msys2 {0}
+        run: |
+          echo "export PATH="${CARGO_DIR}""':$PATH' >> "${HOME}/.bash_profile"
 
       - name: Install rustup 
         if: ${{ true }}
         shell: msys2 {0}
         run: |
-          echo "RUSTUP_HOST: $RUSTUP_HOST"
-          echo "CARGO_DIR  : $CARGO_DIR"
-          exit 1
-          #echo "Downloading rustup-init.sh ..."
-          #curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
-          #echo "Launching rustup-init.sh ..."
-          #${HOME}/rustup-init.sh --verbose -y --default-host ${RUSTUP_HOST} --default-toolchain none --no-modify-path
+          echo "Downloading rustup-init.sh ..."
+          curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
+          echo "Launching rustup-init.sh for host $RUSTUP_HOST ..."
+          ${HOME}/rustup-init.sh --verbose -y --default-host ${RUSTUP_HOST} --default-toolchain none --no-modify-path
 
       - name: Configure Cargo
-        shell: cmd
-        run: |
-            set
-            dir %CARGO_DIR%
-            #[target.x86_64-pc-windows-gnu]
-            #linker = "C:\\msys2\\mingw64\\bin\\gcc.exe"
-            #ar = "C:\\msys2\\mingw64\\bin\\ar.exe"
-
-      - name: Set system PATH variable
         shell: msys2 {0}
         run: |
-          CARGO_DIR="${CARGO_DIR//'C:'/'/c'}"
-          CARGO_DIR="${CARGO_DIR//'\'/'/'}"
-          echo "export PATH="${CARGO_DIR}""':$PATH' >> "${HOME}/.bash_profile"
+            set
+            ls $CARGO_DIR
+            exit 1
 
       - name: Install depends
         shell: msys2 {0}
