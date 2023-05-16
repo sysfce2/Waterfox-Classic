@@ -55,7 +55,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
       - name: Uninstall old rustup
-        if: ${{ false }}
+        if: ${{ true }}
         run: |
           rustup self uninstall -y
 
@@ -73,39 +73,30 @@ jobs:
         if: ${{ true }}
         shell: msys2 {0}
         run: |
-          export DEFAULT_HOST="$(uname -m)-pc-windows-gnu"
-          echo "DEFAULT_HOST: $DEFAULT_HOST"
-          #echo "Downloading rustup-init.sh ..."
-          #curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
-          #echo "Launching rustup-init.sh ..."
-          #${HOME}/rustup-init.sh --verbose -y --default-host ${DEFAULT_HOST} --default-toolchain none --no-modify-path
+          echo "Downloading rustup-init.sh ..."
+          curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
+          echo "Launching rustup-init.sh ..."
+          ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
 
       - name: Set system PATH variable
         shell: msys2 {0}
         run: |
-          CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin2"
-          echo "CARGO_DIR: $CARGO_DIR"
-          echo "${USERPROFILE}\.cargo\bin2" >> $GITHUB_PATH
-          echo 'export PATH="${USERPROFILE}/.cargo/bin2:$PATH"' >> "${HOME}/.bash_profile"
-          cat $HOME/.bash_profile
+          #CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin"
+          #echo "CARGO_DIR: $CARGO_DIR"
+          echo 'export PATH="${USERPROFILE}/.cargo/bin:$PATH"' >> "${HOME}/.bash_profile"
 
-      - name: test1
+      - name: test
         shell: msys2 {0}
-        run: |
-          cat $HOME/.bash_profile
-          echo "PATH: $PATH"
-          echo "DEFAULT_HOST: $DEFAULT_HOST"
-
-      - name: test2
-        shell: bash
         run: |
           echo "PATH: $PATH"
 
       - name: Install depends
-        if: ${{ false }}
+        if: ${{ true }}
         run: |
-          echo "pippo"
-          #rustup default ???
+          TOOLCHAIN="stable-$(uname -m)-pc-windows-gnu"
+          echo "TOOLCHAIN: $TOOLCHAIN"
+          rustup toolchain install $TOOLCHAIN
+          rustup default $TOOLCHAIN
 
       - name: Build
         if: ${{ false }}
