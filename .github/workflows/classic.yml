@@ -33,17 +33,17 @@ jobs:
           .\install.ps1 -RunAsAdmin
           scoop install sccache llvm nasm --global
           # Install 'MozillaBuildSetup-3.4.exe'
-          # mkdir -p ~\\scoop\\buckets\\my-bucket
-          # Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
-          # scoop install my-bucket/mozilla-build --global
+          mkdir -p ~\\scoop\\buckets\\my-bucket
+          Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
+          scoop install my-bucket/mozilla-build --global
           rustup default $env:RUST_VER-pc-windows-msvc
 
       - name: Set system PATH variable
         if: ${{ true }}
         shell: bash
-        #run: sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
         run: |
-          echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
+          sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
+          #echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
 
       - name: Cache for Windows
         if: ${{ true }}
@@ -54,7 +54,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
       - name: Setup MSYS2
-        if: ${{ true }}
+        if: ${{ false }}
         uses: msys2/setup-msys2@v2
         with:
           release: false
@@ -65,10 +65,11 @@ jobs:
 
       - name: Build
         if: ${{ true }}
-        shell: msys2 {0}
+        shell: bash
+        #shell: msys2 {0}
         run: |
-          #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
-          ./build/github-actions/build.sh
+          C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
+          #./build/github-actions/build.sh
 
       - name: Package
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
