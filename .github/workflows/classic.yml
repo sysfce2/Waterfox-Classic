@@ -62,7 +62,7 @@ jobs:
           msystem: mingw64
           #update: true
           #install: git
-          pacboy: rust:p #yasm:p rust:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
+          #pacboy: #yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
       - name: Setup rustup 
         if: ${{ true }}
@@ -70,17 +70,21 @@ jobs:
         run: |
           #rustup default $env:RUST_VER-pc-windows-msvc
           echo "RUST_VER: $RUST_VER"
-          echo "::notice::Downloading rustup-init.sh ..."
+          echo "Downloading rustup-init.sh ..."
           curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
-          echo "::notice::Launching rustup-init.sh ..."
+          echo "Launching rustup-init.sh ..."
           ${HOME}/rustup-init.sh -v -y
+          #export PATH="/c/Users/masterfoo/.cargo/bin:$PATH"
+
+      - name: test
+        shell: msys2 {0}
+        run: |
           echo "PATH: $PATH"
           echo "RUSTUP_HOME       : $RUSTUP_HOME"
           echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
           echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
           echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
           echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
-          #export PATH="/c/Users/masterfoo/.cargo/bin:$PATH"
 
       - name: Build
         if: ${{ false }}
