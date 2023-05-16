@@ -81,9 +81,9 @@ jobs:
         shell: msys2 {0}
         run: |
           echo "RUSTUP_HOST=$(uname -m)-pc-windows-gnu" >> $GITHUB_ENV
-          CARGO_DIR="${USERPROFILE//'C:'/'/c'}"
+          CARGO_DIR="${USERPROFILE//"${HOMEDRIVE}"/'/c'}"
           CARGO_DIR="${CARGO_DIR//'\'/'/'}"
-          echo "CARGO_DIR=${CARGO_DIR}\.cargo\bin" >> $GITHUB_ENV
+          echo "CARGO_DIR=${CARGO_DIR}/.cargo/bin" >> $GITHUB_ENV
 
       - name: Set MSYS2 PATH variable
         shell: msys2 {0}
@@ -102,8 +102,12 @@ jobs:
       - name: Configure Cargo
         shell: msys2 {0}
         run: |
-            set
-            ls $CARGO_DIR
+            echo "CARGO_DIR: $CARGO_DIR"
+            CARGO_CFG="${CARGO_DIR}/config"
+            echo "[target.${RUSTUP_HOST}]" > "$CARGO_CFG"
+            echo 'linker = "C:\\msys64\\mingw64\\bin\\clang++.exe"' >> "$CARGO_CFG"
+            echo 'ar = "C:\\msys64\\mingw64\\bin\\llvm-ar.exe"' >> "$CARGO_CFG"
+            cat "$CARGO_CFG"
             exit 1
 
       - name: Install depends
