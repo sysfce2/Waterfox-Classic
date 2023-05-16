@@ -51,7 +51,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
       - name: Setup MSYS2
-        if: ${{ false }}
+        if: ${{ true }}
         uses: msys2/setup-msys2@v2
         with:
           release: false
