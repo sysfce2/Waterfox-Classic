@@ -55,7 +55,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
       - name: Uninstall old rustup
-        if: ${{ true }}
+        if: ${{ false }}
         run: |
           rustup self uninstall -y
 
@@ -70,7 +70,7 @@ jobs:
           #pacboy: #yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
       - name: Install rustup 
-        if: ${{ true }}
+        if: ${{ false }}
         shell: msys2 {0}
         run: |
           echo "Downloading rustup-init.sh ..."
@@ -81,14 +81,22 @@ jobs:
       - name: Set system PATH variable
         shell: msys2 {0}
         run: |
-          #CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin"
-          #echo "CARGO_DIR: $CARGO_DIR"
-          echo 'export PATH="${USERPROFILE}/.cargo/bin:$PATH"' >> "${HOME}/.bash_profile"
+          CARGO_DIR="${USERPROFILE//'C:'/'/c'}"
+          CARGO_DIR="${CARGO_DIR//'\'/'/'}/.cargo/bin"
+          echo "CARGO_DIR: $CARGO_DIR"
+          echo "export PATH="${CARGO_DIR}""':$PATH' >> "${HOME}/.bash_profile"
 
       - name: test
         shell: msys2 {0}
         run: |
           echo "PATH: $PATH"
+          rustc --version
+          exit 1
+
+      - name: test2
+        shell: cmd
+        run: |
+          dir %USERPROFILE%\.cargo\bin
 
       - name: Install depends
         shell: msys2 {0}
