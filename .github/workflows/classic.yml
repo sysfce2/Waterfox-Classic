@@ -57,7 +57,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           release: false
-          msystem: mingw32
+          msystem: mingw64
           #update: true
           install: git
           pacboy: clang:p nasm:p python2:p yasm:p llvm:p sccache:p

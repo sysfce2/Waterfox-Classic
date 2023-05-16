@@ -8,13 +8,13 @@ if test $(uname -s) = Darwin; then
 	ac_add_options --with-macos-sdk=$PWD/../MacOSX10.12.sdk
 	mk_add_options AUTOCONF=/usr/local/Cellar/autoconf213/2.13/bin/autoconf213
 # Windows 10 Specific Options
-elif test $(uname -s) = MINGW32_NT-10.0-17763; then
+elif test $(uname -s) = MINGW64_NT-10.0-17763; then
 	export LINKER=lld-link
 	export CC=clang-cl
 	export CXX=clang-cl
 	ac_add_options --enable-optimize="-O2 -Qvec -w -clang:-arch:SSE3"
-	ac_add_options --host=x86_64-pc-mingw32
-	ac_add_options --target=x86_64-pc-mingw32
+	ac_add_options --host=x86_64-pc-mingw64
+	ac_add_options --target=x86_64-pc-mingw64
     if test -d "/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise"; then
         export WIN32_REDIST_DIR="/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT"
     else
@@ -69,7 +69,7 @@ ac_add_options --with-app-basename=Waterfox
 ac_add_options --with-branding=browser/branding/unofficial
 ac_add_options --with-distribution-id=org.waterfoxproject
 
-if test $(uname -s) = MINGW32_NT-6.2; then
+if test $(uname -s) = MINGW64_NT-10.0-17763; then
 	X=$(wmic cpu get NumberOfLogicalProcessors /Format:List | cut -d'=' -f2 | xargs)
     mk_add_options MOZ_MAKE_FLAGS=-j${X%.*}
 else
