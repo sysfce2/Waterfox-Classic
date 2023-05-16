@@ -99,7 +99,7 @@ jobs:
           echo "Launching rustup-init.sh for host $RUSTUP_HOST ..."
           ${HOME}/rustup-init.sh --verbose -y --default-host ${RUSTUP_HOST} --default-toolchain none --no-modify-path
 
-      - name: Configure Cargo
+      - name: Configure cargo
         shell: msys2 {0}
         run: |
             CARGO_CFG="${CARGO_DIR}/config"
@@ -111,11 +111,12 @@ jobs:
         shell: msys2 {0}
         if: ${{ true }}
         run: |
+          ls "${CARGO_DIR}"
+          TOOLCHAIN="stable-${RUSTUP_HOST}"
+          rustup default $TOOLCHAIN
           rustc --version
           exit 1
-          TOOLCHAIN="stable-${RUSTUP_HOST}"
           rustup toolchain install $TOOLCHAIN
-          rustup default $TOOLCHAIN
 
       - name: Build
         if: ${{ false }}
