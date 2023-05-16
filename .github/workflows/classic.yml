@@ -79,10 +79,8 @@ jobs:
           ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
 
       - name: Set system PATH variable
-        if: ${{ true }}
-        shell: bash
         run: |
-          echo "${USERPROFILE}/.cargo/bin" >> $GITHUB_PATH
+          echo "$env:USERPROFILE\.cargo\bin" >> $GITHUB_PATH
 
       - name: test1
         shell: msys2 {0}
