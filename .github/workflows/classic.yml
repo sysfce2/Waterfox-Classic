@@ -17,34 +17,30 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
-        if: ${{ false }}
+        if: ${{ true }}
         uses: actions/checkout@v3
- 
-      - name: Set build directory
-        if: ${{ false }}
-        run: |
-          $pattern = '[\\]'
-          $BUILD_DIR = $env:GITHUB_WORKSPACE -replace $pattern, '/'
-          echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Install depends
-        if: ${{ false }}
-        run: |
-          #iwr -useb get.scoop.sh -outfile 'install.ps1'
-          #.\install.ps1 -RunAsAdmin
-          #scoop install sccache llvm nasm --global
-          # Install 'MozillaBuildSetup-3.4.exe'
-          #mkdir -p ~\\scoop\\buckets\\my-bucket
-          #Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
-          #scoop install my-bucket/mozilla-build --global
-          rustup default $env:RUST_VER-pc-windows-msvc
+      #- name: Set build directory
+      #  run: |
+      #    $pattern = '[\\]'
+      #    $BUILD_DIR = $env:GITHUB_WORKSPACE -replace $pattern, '/'
+      #    echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Set system PATH variable
-        if: ${{ false }}
-        shell: bash
-        run: |
-          #sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
-          echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
+      #- name: Install depends
+      #  run: |
+      #    iwr -useb get.scoop.sh -outfile 'install.ps1'
+      #    .\install.ps1 -RunAsAdmin
+      #    scoop install sccache llvm nasm --global
+      #     Install 'MozillaBuildSetup-3.4.exe'
+      #    mkdir -p ~\\scoop\\buckets\\my-bucket
+      #    Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
+      #    scoop install my-bucket/mozilla-build --global
+      #    rustup default $env:RUST_VER-pc-windows-msvc
+
+      #- name: Set system PATH variable
+      #  shell: bash
+      #  run: |
+      #    sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
 
       - name: Cache for Windows
         if: ${{ false }}
@@ -53,7 +49,7 @@ jobs:
           path: |
             ~/AppData/Local/Mozilla/sccache/cache
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
- 
+
       - name: Uninstall old rustup
         if: ${{ true }}
         run: |
@@ -66,16 +62,16 @@ jobs:
           release: false
           msystem: mingw64
           #update: true
-          #install: git
-          #pacboy: >
-          #  clang:p
-          #  lld:p
-          #  llvm:p
-          #  nasm:p
-          #  python2:p
-          #  sccache:p
-          #  yasm:p
-          #  toolchain:p
+          install: git
+          pacboy: >
+            clang:p
+            lld:p
+            llvm:p
+            nasm:p
+            python2:p
+            sccache:p
+            yasm:p
+            toolchain:p
 
       - name: Set rust environment vars
         shell: msys2 {0}
@@ -90,7 +86,7 @@ jobs:
         run: |
           echo "export PATH="${CARGO_DIR}/bin""':$PATH' >> "${HOME}/.bash_profile"
 
-      - name: Install rustup 
+      - name: Install rustup
         if: ${{ true }}
         shell: msys2 {0}
         run: |
@@ -111,15 +107,10 @@ jobs:
         shell: msys2 {0}
         if: ${{ true }}
         run: |
-          ls "${CARGO_DIR}"
-          TOOLCHAIN="stable-${RUSTUP_HOST}"
-          rustup default $TOOLCHAIN
-          rustc --version
-          exit 1
-          rustup toolchain install $TOOLCHAIN
+          rustup default stable-${RUSTUP_HOST}
 
       - name: Build
-        if: ${{ false }}
+        if: ${{ true }}
         shell: msys2 {0}
         run: |
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
@@ -130,7 +121,7 @@ jobs:
         run: |
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/packageZip.sh"
           ./build/github-actions/packageZip.sh
- 
+
       - name: Upload artifact
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
         uses: actions/upload-artifact@v3
