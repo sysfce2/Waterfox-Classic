@@ -58,7 +58,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           release: false
-          msystem: mingw64
+          msystem: mingw32
           #update: true
           install: git
           pacboy: nasm:p python2:p yasm:p
@@ -68,7 +68,7 @@ jobs:
         #shell: msys2 {0}
         run: |
           C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "env"
-          C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "uname -s"
+          C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "echo $(uname -s)"
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
           #./build/github-actions/build.sh
 
