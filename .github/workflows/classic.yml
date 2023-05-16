@@ -71,7 +71,7 @@ jobs:
 
       - name: Uninstall rustup
         run: |
-          rustup self uninstall
+          rustup self uninstall -y
 
       - name: test1
         shell: cmd
@@ -83,11 +83,17 @@ jobs:
         shell: msys2 {0}
         run: |
           echo "RUST_VER: $RUST_VER"
+
           echo "Downloading rustup-init.sh ..."
           curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
+
           echo "Launching rustup-init.sh ..."
-          ${HOME}/rustup-init.sh --verbose -y --no-update-default-toolchain --no-modify-path
-          #export PATH="/c/Users/masterfoo/.cargo/bin:$PATH"
+          ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
+
+          echo "Updating PATH..."
+          echo "${USERPROFILE}/.cargo/bin" >> $GITHUB_PATH
+
+          echo "PATH: $PATH"
           #rustup default $env:RUST_VER-pc-windows-msvc
 
       - name: test2
@@ -99,6 +105,7 @@ jobs:
           echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
           echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
           echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
+          rustc --version
 
       - name: test3
         shell: cmd
@@ -109,10 +116,6 @@ jobs:
           echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
           echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
           echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
-          dir "%USERPROFILE%"
-          dir "%USERPROFILE%\.cargo"
-          dir "%USERPROFILE%\.cargo\bin"
-          dir "%USERPROFILE%\.rustup"
           rustc --version
 
       - name: Build
