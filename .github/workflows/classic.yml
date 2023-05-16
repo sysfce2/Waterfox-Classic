@@ -47,7 +47,7 @@ jobs:
           echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
 
       - name: Cache for Windows
-        if: ${{ true }}
+        if: ${{ false }}
         uses: actions/cache@v3
         with:
           path: |
@@ -62,8 +62,7 @@ jobs:
           msystem: mingw64
           #update: true
           install: git
-          pacboy: clang:p nasm:p python2:p yasm:p sccache:p llvm:p rust:p
-
+          pacboy: yasm:p rust:p clang:p llvm:p nasm:p python:p lld:p sccache:p
       - name: Build
         if: ${{ true }}
         shell: msys2 {0}
