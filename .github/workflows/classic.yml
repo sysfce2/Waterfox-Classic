@@ -91,12 +91,13 @@ jobs:
           echo "PATH: $PATH"
 
       - name: Install depends
+        shell: msys2 {0}
         if: ${{ true }}
         run: |
           TOOLCHAIN="stable-$(uname -m)-pc-windows-gnu"
           echo "TOOLCHAIN: $TOOLCHAIN"
-          rustup toolchain install $TOOLCHAIN
-          rustup default $TOOLCHAIN
+          rustup toolchain install $TOOLCHAIN -v
+          rustup default $TOOLCHAIN -v
 
       - name: Build
         if: ${{ false }}
