@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
-        if: ${{ true }}
+        if: ${{ false }}
         uses: actions/checkout@v3
  
       - name: Set build directory
@@ -28,7 +28,7 @@ jobs:
           echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Install depends
-        if: ${{ true }}
+        if: ${{ false }}
         run: |
           #iwr -useb get.scoop.sh -outfile 'install.ps1'
           #.\install.ps1 -RunAsAdmin
@@ -61,11 +61,29 @@ jobs:
           release: false
           msystem: mingw64
           #update: true
-          install: git
-          pacboy: yasm:p rust:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
+          #install: git
+          pacboy: rust:p #yasm:p rust:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
+
+      - name: Setup rustup 
+        if: ${{ true }}
+        shell: msys2 {0}
+        run: |
+          #rustup default $env:RUST_VER-pc-windows-msvc
+          echo "RUST_VER: $RUST_VER"
+          echo "::notice::Downloading rustup-init.sh ..."
+          curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
+          echo "::notice::Launching rustup-init.sh ..."
+          ${HOME}/rustup-init.sh -v -y
+          echo "PATH: $PATH"
+          echo "RUSTUP_HOME       : $RUSTUP_HOME"
+          echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
+          echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
+          echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
+          echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
+          #export PATH="/c/Users/masterfoo/.cargo/bin:$PATH"
 
       - name: Build
-        if: ${{ true }}
+        if: ${{ flase }}
         shell: msys2 {0}
         run: |
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
