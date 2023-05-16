@@ -32,6 +32,7 @@ jobs:
           iwr -useb get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin
           #scoop install sccache llvm nasm --global
+          scoop install llvm --global
           # Install 'MozillaBuildSetup-3.4.exe'
           #mkdir -p ~\\scoop\\buckets\\my-bucket
           #Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
@@ -60,7 +61,7 @@ jobs:
           msystem: mingw64
           #update: true
           install: git
-          pacboy: clang:p nasm:p python2:p yasm:p llvm:p sccache:p
+          pacboy: clang:p nasm:p python2:p yasm:p sccache:p #llvm:p
 
       - name: Build
         if: ${{ true }}
