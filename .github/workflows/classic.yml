@@ -76,7 +76,7 @@ jobs:
       - name: Set rust environment vars
         shell: msys2 {0}
         run: |
-          echo "RUSTUP_HOST=$(uname -m)-pc-windows-gnu" >> $GITHUB_ENV
+          echo "RUSTUP_HOST=$(uname -m)-pc-windows-msvc" >> $GITHUB_ENV
           CARGO_DIR="${USERPROFILE//"${HOMEDRIVE}"/'/c'}"
           CARGO_DIR="${CARGO_DIR//'\'/'/'}"
           echo "CARGO_DIR=${CARGO_DIR}/.cargo" >> $GITHUB_ENV
@@ -95,13 +95,13 @@ jobs:
           echo "Launching rustup-init.sh for host $RUSTUP_HOST ..."
           ${HOME}/rustup-init.sh --verbose -y --default-host ${RUSTUP_HOST} --default-toolchain none --no-modify-path
 
-      - name: Configure cargo
-        shell: msys2 {0}
-        run: |
-            CARGO_CFG="${CARGO_DIR}/config"
-            echo "[target.${RUSTUP_HOST}]" > "$CARGO_CFG"
-            echo 'linker = "C:\\msys64\\mingw64\\bin\\clang++.exe"' >> "$CARGO_CFG"
-            echo 'ar = "C:\\msys64\\mingw64\\bin\\llvm-ar.exe"' >> "$CARGO_CFG"
+      #- name: Configure cargo
+      #  shell: msys2 {0}
+      #  run: |
+      #      CARGO_CFG="${CARGO_DIR}/config"
+      #      echo "[target.${RUSTUP_HOST}]" > "$CARGO_CFG"
+      #      echo 'linker = "C:\\msys64\\mingw64\\bin\\clang++.exe"' >> "$CARGO_CFG"
+      #      echo 'ar = "C:\\msys64\\mingw64\\bin\\llvm-ar.exe"' >> "$CARGO_CFG"
 
       - name: Install depends
         shell: msys2 {0}
