@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
-        if: ${{ true }}
+        if: ${{ false }}
         uses: actions/checkout@v3
  
       - name: Set build directory
@@ -47,7 +47,7 @@ jobs:
           echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
 
       - name: Cache for Windows
-        if: ${{ true }}
+        if: ${{ false }}
         uses: actions/cache@v3
         with:
           path: |
@@ -66,35 +66,59 @@ jobs:
           release: false
           msystem: mingw64
           #update: true
-          install: git
-          pacboy: yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
+          #install: git
+          #pacboy: >
+          #  clang:p
+          #  lld:p
+          #  llvm:p
+          #  nasm:p
+          #  python2:p
+          #  sccache:p
+          #  yasm:p
+          #  toolchain:p
 
       - name: Install rustup 
         if: ${{ true }}
         shell: msys2 {0}
         run: |
-          echo "Downloading rustup-init.sh ..."
-          curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
-          echo "Launching rustup-init.sh ..."
-          ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
+          HOST="$(uname -m)-pc-windows-gnu"
+          echo "RUSTUP_HOST=${HOST}" >> $GITHUB_ENV
+          echo "RUSTUP_HOST: $RUSTUP_HOST"
+          exit 1
+          #CARGO_DIR="${USERPROFILE}\.cargo\bin"
+          #echo "RUSTUP_HOST=${RUSTUP_HOST}" >> $GITHUB_ENV
+          #echo "Downloading rustup-init.sh ..."
+          #curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
+          #echo "Launching rustup-init.sh ..."
+          #${HOME}/rustup-init.sh --verbose -y --default-host ${RUSTUP_HOST} --default-toolchain none --no-modify-path
+
+      - name: Configure Cargo
+        if: ${{ true }}
+        shell: cmd
+        run: |
+            set
+            dir %CARGO_DIR%
+            #[target.x86_64-pc-windows-gnu]
+            #linker = "C:\\msys2\\mingw64\\bin\\gcc.exe"
+            #ar = "C:\\msys2\\mingw64\\bin\\ar.exe"
 
       - name: Set system PATH variable
         shell: msys2 {0}
         run: |
           CARGO_DIR="${USERPROFILE//'C:'/'/c'}"
-          CARGO_DIR="${CARGO_DIR//'\'/'/'}/.cargo/bin"
+          CARGO_DIR="${CARGO_DIR//'\'/'/'}"
           echo "export PATH="${CARGO_DIR}""':$PATH' >> "${HOME}/.bash_profile"
 
       - name: Install depends
         shell: msys2 {0}
-        if: ${{ true }}
+        if: ${{ false }}
         run: |
-          TOOLCHAIN="stable-$(uname -m)-pc-windows-gnu"
+          TOOLCHAIN="stable-${RUSTUP_HOST}"
           rustup toolchain install $TOOLCHAIN
           rustup default $TOOLCHAIN
 
       - name: Build
-        if: ${{ true }}
+        if: ${{ false }}
         shell: msys2 {0}
         run: |
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
