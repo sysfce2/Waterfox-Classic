@@ -91,7 +91,6 @@ jobs:
           echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
           echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
           echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
-          rustc --version
 
       - name: test2
         shell: bash
