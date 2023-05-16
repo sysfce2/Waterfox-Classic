@@ -80,12 +80,12 @@ jobs:
           ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
 
       - name: Set system PATH variable
-        run: |
         shell: msys2 {0}
+        run: |
           CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin"
           echo "CARGO_DIR: $CARGO_DIR"
-          #echo "$CARGO_DIR" >> $GITHUB_PATH
-          #echo 'export PATH="${USERPROFILE}/.cargo/bin:$PATH"' >> "${HOME}/.bashrc"
+          echo "$CARGO_DIR" >> $GITHUB_PATH
+          echo 'export PATH="${USERPROFILE}/.cargo/bin:$PATH"' >> "${HOME}/.bashrc"
 
       - name: test1
         shell: msys2 {0}
