@@ -70,28 +70,31 @@ jobs:
           #pacboy: #yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
       - name: Install rustup 
-        if: ${{ false }}
+        if: ${{ true }}
         shell: msys2 {0}
         run: |
-          echo "Downloading rustup-init.sh ..."
-          curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
-          echo "Launching rustup-init.sh ..."
-          ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
+          export DEFAULT_HOST="$(uname -m)-pc-windows-gnu"
+          echo "DEFAULT_HOST: $DEFAULT_HOST"
+          #echo "Downloading rustup-init.sh ..."
+          #curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
+          #echo "Launching rustup-init.sh ..."
+          #${HOME}/rustup-init.sh --verbose -y --default-host ${DEFAULT_HOST} --default-toolchain none --no-modify-path
 
       - name: Set system PATH variable
-        shell: bash
+        shell: msys2 {0}
         run: |
-          #CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin2"
-          #echo "CARGO_DIR: $CARGO_DIR"
-          echo "${USERPROFILE}/.cargo/bin2" >> $GITHUB_PATH
-          #echo 'export PATH="${USERPROFILE}/.cargo/bin2:$PATH"' >> "${HOME}/.bashrc"
-          #cat $HOME/.bashrc
+          CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin2"
+          echo "CARGO_DIR: $CARGO_DIR"
+          echo "${USERPROFILE}\.cargo\bin2" >> $GITHUB_PATH
+          echo 'export PATH="${USERPROFILE}/.cargo/bin2:$PATH"' >> "${HOME}/.bash_profile"
+          cat $HOME/.bash_profile
 
       - name: test1
         shell: msys2 {0}
         run: |
-          #cat $HOME/.bashrc
+          cat $HOME/.bash_profile
           echo "PATH: $PATH"
+          echo "DEFAULT_HOST: $DEFAULT_HOST"
 
       - name: test2
         shell: bash
@@ -102,7 +105,7 @@ jobs:
         if: ${{ false }}
         run: |
           echo "pippo"
-          #rustup default stable-x86_64-pc-windows-gnu
+          #rustup default ???
 
       - name: Build
         if: ${{ false }}
