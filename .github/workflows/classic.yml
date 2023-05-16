@@ -80,39 +80,19 @@ jobs:
 
       - name: Set system PATH variable
         run: |
-          echo "$env:USERPROFILE\.cargo\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        shell: msys2 {0}
+          echo "${USERPROFILE}\.cargo\bin" >> $GITHUB_PATH
+          echo 'export PATH="${USERPROFILE}/.cargo/bin:$PATH"' >> "${HOME}/.bashrc"
 
       - name: test1
         shell: msys2 {0}
         run: |
           echo "PATH: $PATH"
-          echo "RUSTUP_HOME       : $RUSTUP_HOME"
-          echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
-          echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
-          echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
-          echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
 
       - name: test2
         shell: bash
         run: |
           echo "PATH: $PATH"
-          echo "RUSTUP_HOME       : $RUSTUP_HOME"
-          echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
-          echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
-          echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
-          echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
-          rustc --version
-
-      - name: test3
-        shell: cmd
-        run: |
-          echo "PATH: $PATH"
-          echo "RUSTUP_HOME       : $RUSTUP_HOME"
-          echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
-          echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
-          echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
-          echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
-          rustc --version
 
       - name: Install depends
         if: ${{ false }}
