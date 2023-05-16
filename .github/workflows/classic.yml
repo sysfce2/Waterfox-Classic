@@ -62,16 +62,17 @@ jobs:
           release: false
           msystem: mingw64
           #update: true
-          install: git
+          install: autotools doxygen git
           pacboy: >
+            toolchain:p
             clang:p
             lld:p
             llvm:p
             nasm:p
             python2:p
-            sccache:p
+            unzip:p
             yasm:p
-            toolchain:p
+            zip:p
 
       - name: Set rust environment vars
         shell: msys2 {0}
