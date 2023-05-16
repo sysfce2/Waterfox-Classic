@@ -8,7 +8,7 @@ if test $(uname -s) = Darwin; then
 	ac_add_options --with-macos-sdk=$PWD/../MacOSX10.12.sdk
 	mk_add_options AUTOCONF=/usr/local/Cellar/autoconf213/2.13/bin/autoconf213
 # Windows 10 Specific Options
-elif test $(uname -s) = MINGW32_NT-6.2; then
+elif test $(uname -s) = MINGW32_NT-10.0-17763; then
 	export LINKER=lld-link
 	export CC=clang-cl
 	export CXX=clang-cl
