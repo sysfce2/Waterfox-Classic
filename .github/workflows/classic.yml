@@ -64,6 +64,20 @@ jobs:
           #install: git
           #pacboy: #yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
+      - name: test0
+        shell: cmd
+        run: |
+          dir "%USERPROFILE%"
+
+      - name: Uninstall rustup
+        run: |
+          rustup self uninstall
+
+      - name: test1
+        shell: cmd
+        run: |
+          dir "%USERPROFILE%"
+
       - name: Setup rustup 
         if: ${{ true }}
         shell: msys2 {0}
@@ -76,10 +90,9 @@ jobs:
           #export PATH="/c/Users/masterfoo/.cargo/bin:$PATH"
           #rustup default $env:RUST_VER-pc-windows-msvc
 
-      - name: test
+      - name: test2
         shell: msys2 {0}
         run: |
-          env
           echo "PATH: $PATH"
           echo "RUSTUP_HOME       : $RUSTUP_HOME"
           echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
@@ -87,12 +100,20 @@ jobs:
           echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
           echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
 
-      - name: test2
+      - name: test3
         shell: cmd
         run: |
+          echo "PATH: $PATH"
+          echo "RUSTUP_HOME       : $RUSTUP_HOME"
+          echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
+          echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
+          echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
+          echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
           dir "%USERPROFILE%"
           dir "%USERPROFILE%\.cargo"
           dir "%USERPROFILE%\.cargo\bin"
+          dir "%USERPROFILE%\.rustup"
+          rustc --version
 
       - name: Build
         if: ${{ false }}
