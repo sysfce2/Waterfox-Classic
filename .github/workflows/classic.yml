@@ -66,7 +66,7 @@ jobs:
           release: false
           msystem: mingw64
           #update: true
-          #install: git
+          install: git
           pacboy: yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
       - name: Install rustup 
