@@ -79,13 +79,20 @@ jobs:
       - name: test
         shell: msys2 {0}
         run: |
-          evn
-          #echo "PATH: $PATH"
-          #echo "RUSTUP_HOME       : $RUSTUP_HOME"
-          #echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
-          #echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
-          #echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
-          #echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
+          env
+          echo "PATH: $PATH"
+          echo "RUSTUP_HOME       : $RUSTUP_HOME"
+          echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
+          echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
+          echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
+          echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
+
+      - name: test2
+        shell: cmd
+        run: |
+          dir "%USERPROFILE%"
+          dir "%USERPROFILE%\.cargo"
+          dir "%USERPROFILE%\.cargo\bin"
 
       - name: Build
         if: ${{ false }}
