@@ -6,7 +6,7 @@ on:
 
 env:
   ENABLE_ARTIFACTS_MODE: "false"
-  RUST_VER: "1.63.0"
+  #RUST_VER: "1.63.0"
   SHELL: "/bin/bash"
 
 jobs:
@@ -73,25 +73,24 @@ jobs:
         if: ${{ false }}
         shell: msys2 {0}
         run: |
-          echo "RUST_VER: $RUST_VER"
           echo "Downloading rustup-init.sh ..."
           curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
           echo "Launching rustup-init.sh ..."
           ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
 
       - name: Set system PATH variable
-        shell: msys2 {0}
+        shell: bash
         run: |
-          CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin2"
-          echo "CARGO_DIR: $CARGO_DIR"
-          echo "$CARGO_DIR" >> $GITHUB_PATH
-          echo 'export PATH="${USERPROFILE}/.cargo/bin2:$PATH"' >> "${HOME}/.bashrc"
-          cat $HOME/.bashrc
+          #CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin2"
+          #echo "CARGO_DIR: $CARGO_DIR"
+          echo "${USERPROFILE}/.cargo/bin2" >> $GITHUB_PATH
+          #echo 'export PATH="${USERPROFILE}/.cargo/bin2:$PATH"' >> "${HOME}/.bashrc"
+          #cat $HOME/.bashrc
 
       - name: test1
         shell: msys2 {0}
         run: |
-          cat $HOME/.bashrc
+          #cat $HOME/.bashrc
           echo "PATH: $PATH"
 
       - name: test2
@@ -103,7 +102,7 @@ jobs:
         if: ${{ false }}
         run: |
           echo "pippo"
-          #rustup default $env:RUST_VER-pc-windows-msvc
+          #rustup default stable-x86_64-pc-windows-gnu
 
       - name: Build
         if: ${{ false }}
