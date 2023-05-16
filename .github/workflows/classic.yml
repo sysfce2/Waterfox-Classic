@@ -54,6 +54,10 @@ jobs:
             ~/AppData/Local/Mozilla/sccache/cache
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
+      - name: Uninstall old rustup
+        run: |
+          rustup self uninstall -y
+
       - name: Setup MSYS2
         if: ${{ true }}
         uses: msys2/setup-msys2@v2
@@ -64,40 +68,35 @@ jobs:
           #install: git
           #pacboy: #yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
-      - name: test0
-        shell: cmd
-        run: |
-          dir "%USERPROFILE%"
-
-      - name: Uninstall rustup
-        run: |
-          rustup self uninstall -y
-
-      - name: test1
-        shell: cmd
-        run: |
-          dir "%USERPROFILE%"
-
-      - name: Setup rustup 
+      - name: Install rustup 
         if: ${{ true }}
         shell: msys2 {0}
         run: |
           echo "RUST_VER: $RUST_VER"
-
           echo "Downloading rustup-init.sh ..."
           curl --proto '=https' --tlsv1.2 -sSf 'https://sh.rustup.rs'>"${HOME}/rustup-init.sh"
-
           echo "Launching rustup-init.sh ..."
           ${HOME}/rustup-init.sh --verbose -y --default-toolchain none --no-modify-path
 
-          echo "Updating PATH..."
+      - name: Set system PATH variable
+        if: ${{ true }}
+        shell: bash
+        run: |
           echo "${USERPROFILE}/.cargo/bin" >> $GITHUB_PATH
 
+      - name: test1
+        shell: msys2 {0}
+        run: |
           echo "PATH: $PATH"
-          #rustup default $env:RUST_VER-pc-windows-msvc
+          echo "RUSTUP_HOME       : $RUSTUP_HOME"
+          echo "RUSTUP_TOOLCHAIN  : $RUSTUP_TOOLCHAIN"
+          echo "RUSTUP_DIST_SERVER: $RUSTUP_DIST_SERVER"
+          echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
+          echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
+          rustc --version
 
       - name: test2
-        shell: msys2 {0}
+        shell: bash
         run: |
           echo "PATH: $PATH"
           echo "RUSTUP_HOME       : $RUSTUP_HOME"
@@ -117,6 +116,12 @@ jobs:
           echo "RUSTUP_DIST_ROOT  : $RUSTUP_DIST_ROOT"
           echo "RUSTUP_UPDATE_ROOT: $RUSTUP_UPDATE_ROOT"
           rustc --version
+
+      - name: Install depends
+        if: ${{ false }}
+        run: |
+          echo "pippo"
+          #rustup default $env:RUST_VER-pc-windows-msvc
 
       - name: Build
         if: ${{ false }}
