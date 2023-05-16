@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
-        if: ${{ false }}
+        if: ${{ true }}
         uses: actions/checkout@v3
  
       - name: Set build directory
@@ -54,7 +54,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
       - name: Setup MSYS2
-        if: ${{ false }}
+        if: ${{ true }}
         uses: msys2/setup-msys2@v2
         with:
           release: false
@@ -64,7 +64,7 @@ jobs:
           pacboy: yasm:p rust:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
       - name: Build
-        if: ${{ false }}
+        if: ${{ true }}
         shell: msys2 {0}
         run: |
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
