@@ -17,7 +17,6 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
-        if: ${{ true }}
         uses: actions/checkout@v3
  
       - name: Set build directory
@@ -27,26 +26,24 @@ jobs:
           echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Install depends
-        if: ${{ true }}
         run: |
           iwr -useb get.scoop.sh -outfile 'install.ps1'
           .\install.ps1 -RunAsAdmin
           scoop install sccache llvm nasm --global
           # Install 'MozillaBuildSetup-3.4.exe'
-          mkdir -p ~\\scoop\\buckets\\my-bucket
-          Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
-          scoop install my-bucket/mozilla-build --global
+          #mkdir -p ~\\scoop\\buckets\\my-bucket
+          #Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
+          #scoop install my-bucket/mozilla-build --global
           rustup default $env:RUST_VER-pc-windows-msvc
 
       - name: Set system PATH variable
-        if: ${{ true }}
         shell: bash
         run: |
-          sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
-          #echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
+          #sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims;C:\\ProgramData\\scoop\\apps\\llvm\\current\\bin/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
+          echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
 
       - name: Cache for Windows
-        if: ${{ false }}
+        if: ${{ true }}
         uses: actions/cache@v3
         with:
           path: |
@@ -61,16 +58,14 @@ jobs:
           msystem: mingw32
           #update: true
           install: git
-          pacboy: nasm:p python2:p yasm:p
+          pacboy: clang:p nasm:p python2:p yasm:p #llvm:p
 
       - name: Build
         if: ${{ true }}
-        #shell: msys2 {0}
+        shell: msys2 {0}
         run: |
-          C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "env"
-          C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "echo $(uname -s)"
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
-          #./build/github-actions/build.sh
+          ./build/github-actions/build.sh
 
       - name: Package
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
