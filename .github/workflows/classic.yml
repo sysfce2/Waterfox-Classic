@@ -81,9 +81,9 @@ jobs:
       - name: Set system PATH variable
         run: |
         shell: msys2 {0}
-          CARGO_DIR="${USERPROFILE}/.cargo/bin"
-          echo "${USERPROFILE}\.cargo\bin" >> $GITHUB_PATH
-          #echo 'export PATH="${USERPROFILE}/.cargo/bin:$PATH"' >> "${HOME}/.bashrc"
+       		CARGO_DIR="${USERPROFILE//'\'/'/'}/.cargo/bin"
+          echo "$CARGO_DIR" >> $GITHUB_PATH
+          echo 'export PATH="${USERPROFILE}/.cargo/bin:$PATH"' >> "${HOME}/.bashrc"
 
       - name: test1
         shell: msys2 {0}
