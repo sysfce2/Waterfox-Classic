@@ -63,10 +63,12 @@ jobs:
           #update: true
           install: git
           pacboy: yasm:p rust:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
+
       - name: Build
         if: ${{ true }}
         shell: msys2 {0}
         run: |
+          rustup default $env:RUST_VER-pc-windows-msvc
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
           ./build/github-actions/build.sh
 

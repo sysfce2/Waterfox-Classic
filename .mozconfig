@@ -1,28 +1,23 @@
 # One config to rule them all
 
 # Windows 10 Specific Options
-export LINKER=lld-link
+#export LINKER=lld-link
 export CC=clang-cl
 export CXX=clang-cl
+
+ac_add_options --enable-application=browser
+mk_add_options MOZ_OBJDIR=objdir-classic
+mk_add_options AUTOCLOBBER=1
+
+ac_add_options --enable-eme=widevine
+ac_add_options --enable-release
+ac_add_options --enable-hardening
 ac_add_options --enable-optimize="-O2 -Qvec -w -clang:-arch:SSE3"
 ac_add_options --host=x86_64-pc-mingw64
 ac_add_options --target=x86_64-pc-mingw64
-if test -d "/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise"; then
-    export WIN32_REDIST_DIR="/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT"
-else
-  	ac_add_options --with-visual-studio-version=2017
-    export WIN32_REDIST_DIR="/c/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT"
-fi
-export WIN_UCRT_REDIST_DIR="/c/Program Files (x86)/Windows Kits/10/Redist/ucrt/DLLs/x64"
-
-ac_add_options --disable-crashreporter
-ac_add_options --disable-js-shell
-ac_add_options --disable-maintenance-service
-ac_add_options --disable-profiling
-ac_add_options --disable-signmar
-ac_add_options --disable-stylo
-ac_add_options --disable-tests
-ac_add_options --disable-verify-mar
+ac_add_options --enable-rust-simd # on x86 requires SSE2
+ac_add_options --enable-linker=lld
+#ac_add_options --disable-bootstrap
 
 if [ -x "$(command -v sccache)" ]; then
 	ac_add_options --with-ccache=sccache
@@ -32,23 +27,36 @@ elif [ -f "$HOME/.mozbuild/sccache/sccache" ]; then
 	ac_add_options --with-ccache=$HOME/.mozbuild/sccache/sccache
 fi
 
-ac_add_options --enable-application=browser
-ac_add_options --enable-eme=widevine
-ac_add_options --enable-release
-ac_add_options --enable-rust-simd # on x86 requires SSE2
-ac_add_options --enable-update-channel=release
-ac_add_options --enable-updater
-
-ac_add_options --with-app-name=waterfox
+# Branding
 ac_add_options --with-app-basename=Waterfox
+ac_add_options --with-app-name=waterfox
 ac_add_options --with-branding=browser/branding/unofficial
+ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.waterfoxproject
+ac_add_options --with-unsigned-addon-scopes=app,system
+ac_add_options --allow-addon-sideload
+
+# Features
+ac_add_options --disable-crashreporter
+ac_add_options --disable-js-shell
+ac_add_options --disable-maintenance-service
+ac_add_options --disable-profiling
+ac_add_options --disable-signmar
+ac_add_options --disable-stylo
+ac_add_options --disable-tests
+ac_add_options --disable-updater
+ac_add_options --disable-verify-mar
 
 X=$(wmic cpu get NumberOfLogicalProcessors /Format:List | cut -d'=' -f2 | xargs)
 mk_add_options MOZ_MAKE_FLAGS=-j${X%.*}
 
-mk_add_options AUTOCLOBBER=1
-mk_add_options MOZ_OBJDIR=objdir-classic
+if test -d "/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise"; then
+    export WIN32_REDIST_DIR="/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT"
+else
+  	ac_add_options --with-visual-studio-version=2017
+    export WIN32_REDIST_DIR="/c/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT"
+fi
+export WIN_UCRT_REDIST_DIR="/c/Program Files (x86)/Windows Kits/10/Redist/ucrt/DLLs/x64"
 
 export MOZ_GECKO_PROFILER=
 export MOZ_ENABLE_PROFILER_SPS=
