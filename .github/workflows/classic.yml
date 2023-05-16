@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
-        if: ${{ false }}
+        if: ${{ true }}
         uses: actions/checkout@v3
  
       - name: Set build directory
@@ -47,7 +47,7 @@ jobs:
           echo "C:\Rust\.cargo\bin;C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\llvm\current\bin" >> $GITHUB_PATH
 
       - name: Cache for Windows
-        if: ${{ false }}
+        if: ${{ true }}
         uses: actions/cache@v3
         with:
           path: |
@@ -55,7 +55,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
  
       - name: Uninstall old rustup
-        if: ${{ false }}
+        if: ${{ true }}
         run: |
           rustup self uninstall -y
 
@@ -67,10 +67,10 @@ jobs:
           msystem: mingw64
           #update: true
           #install: git
-          #pacboy: #yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
+          pacboy: yasm:p clang:p llvm:p nasm:p python2:p lld:p sccache:p
 
       - name: Install rustup 
-        if: ${{ false }}
+        if: ${{ true }}
         shell: msys2 {0}
         run: |
           echo "Downloading rustup-init.sh ..."
@@ -83,32 +83,18 @@ jobs:
         run: |
           CARGO_DIR="${USERPROFILE//'C:'/'/c'}"
           CARGO_DIR="${CARGO_DIR//'\'/'/'}/.cargo/bin"
-          echo "CARGO_DIR: $CARGO_DIR"
           echo "export PATH="${CARGO_DIR}""':$PATH' >> "${HOME}/.bash_profile"
-
-      - name: test
-        shell: msys2 {0}
-        run: |
-          echo "PATH: $PATH"
-          rustc --version
-          exit 1
-
-      - name: test2
-        shell: cmd
-        run: |
-          dir %USERPROFILE%\.cargo\bin
 
       - name: Install depends
         shell: msys2 {0}
         if: ${{ true }}
         run: |
           TOOLCHAIN="stable-$(uname -m)-pc-windows-gnu"
-          echo "TOOLCHAIN: $TOOLCHAIN"
           rustup toolchain install $TOOLCHAIN -v
           rustup default $TOOLCHAIN -v
 
       - name: Build
-        if: ${{ false }}
+        if: ${{ true }}
         shell: msys2 {0}
         run: |
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
@@ -116,7 +102,9 @@ jobs:
 
       - name: Package
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
-        run: C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/packageZip.sh"
+        run: |
+          #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/packageZip.sh"
+          ./build/github-actions/packageZip.sh
  
       - name: Upload artifact
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
