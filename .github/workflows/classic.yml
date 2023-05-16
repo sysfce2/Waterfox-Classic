@@ -17,6 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout branch
+        if: ${{ false }}
         uses: actions/checkout@v3
  
       - name: Set build directory
@@ -64,8 +65,15 @@ jobs:
         if: ${{ true }}
         shell: msys2 {0}
         run: |
+          uname -s
+          echo "search for msys2..."
+          command -v msys2
+          echo "search for sccache..."
+          command -v sccache
+          echo "search for ccache..."
+          command -v ccache
           #C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
-          ./build/github-actions/build.sh
+          #./build/github-actions/build.sh
 
       - name: Package
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
