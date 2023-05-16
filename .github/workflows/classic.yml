@@ -65,7 +65,6 @@ jobs:
 
       - name: Build
         if: ${{ true }}
-        shell: bash
         #shell: msys2 {0}
         run: |
           C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
