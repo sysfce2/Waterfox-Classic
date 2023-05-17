@@ -1,7 +1,7 @@
 name: Build Classic for Testing
 
 on:
-  push:
+  #push:
   workflow_dispatch:
 
 env:
